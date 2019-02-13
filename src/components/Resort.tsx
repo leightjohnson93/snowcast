@@ -20,10 +20,20 @@ const Resort: React.SFC<{
   const { newSnow, last48Hours, last7Days } = forecast
   const { name, logoURLString } = mountain
 
+  const snowfallToHex = (forecast: Forecast) => {
+    const forecastFloat = Object.values(forecast).map(snowfall =>
+      parseFloat(snowfall)
+    )
+    const [newSnow, last48Hours, last7Days] = forecastFloat
+    const weightedSnowfall = newSnow * 1.5 + last48Hours + last7Days * 0.5
+    return Math.floor((weightedSnowfall / 36) * 255).toString(16)
+  }
+
   const styles = createStyles({
     card: {
-      backgroundColor: `${theme.palette.secondary.main}${(+last48Hours / 12) *
-        100}`
+      backgroundColor: `${theme.palette.primary.light}${snowfallToHex(
+        forecast
+      )}`
     },
     gridItem: {
       width: '24vw'

@@ -7,8 +7,10 @@ import Header from './Header'
 
 const theme = createMuiTheme({
   palette: {
-    primary: { main: '#98e6e6' },
-    secondary: { main: '#dbffff' }
+    primary: { main: '#8b85ff', light: '#85f3ff', dark: '#85ff91' }
+  },
+  typography: {
+    useNextVariants: true
   }
 })
 
@@ -63,8 +65,7 @@ export interface Mountain {
 
 export interface Theme {
   palette: {
-    primary: { main: string }
-    secondary: { main: string }
+    primary: { main: string; light: string; dark: string }
   }
 }
 
