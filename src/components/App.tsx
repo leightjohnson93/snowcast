@@ -7,14 +7,14 @@ import Header from './Header'
 
 const theme = createMuiTheme({
   palette: {
-    primary: { main: '#8b85ff', light: '#85f3ff', dark: '#85ff91' }
+    primary: { main: '#8b85ff', light: '#85f3ff', dark: '#85ff91' },
   },
   typography: {
-    useNextVariants: true
-  }
+    useNextVariants: true,
+  },
 })
 
-const App: React.SFC = () => {
+const App: React.FC = () => {
   const [forecast, setForecast] = useState([])
   const [mountains, setMountains] = useState([])
 
@@ -55,6 +55,17 @@ export interface Forecast {
   newSnow: string
   last48Hours: string
   last7Days: string
+  weatherForecast: [
+    {
+      daycode: number
+      dayDescription: string
+      forecastString: string
+      iconName: string
+      summaryDescription: string
+      temperatureHigh: string
+      temperatureLow: string
+    }
+  ]
 }
 
 export interface Mountain {

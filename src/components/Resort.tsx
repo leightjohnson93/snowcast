@@ -12,7 +12,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import { Forecast, Mountain, Theme } from './App'
 
-const Resort: React.SFC<{
+const Resort: React.FC<{
   forecast: Forecast
   mountain: Mountain
   theme: Theme
@@ -20,12 +20,13 @@ const Resort: React.SFC<{
   const { newSnow, last48Hours, last7Days } = forecast
   const { name, logoURLString } = mountain
 
-  const snowfallToHex = (forecast: Forecast) => {
-    const forecastFloat = Object.values(forecast).map(snowfall =>
-      parseFloat(snowfall)
+  const snowfallToHex = (forecast: Forecast): string => {
+    const forecastFloat = Object.values(forecast).map(
+      (snowfall: string): number => parseFloat(snowfall)
     )
     const [newSnow, last48Hours, last7Days] = forecastFloat
-    const weightedSnowfall = newSnow * 1.5 + last48Hours + last7Days * 0.5
+    let weightedSnowfall = newSnow * 1.5 + last48Hours + last7Days * 0.5
+    weightedSnowfall = weightedSnowfall > 255 ? 255 : weightedSnowfall
     return Math.floor((weightedSnowfall / 36) * 255).toString(16)
   }
 
@@ -33,21 +34,21 @@ const Resort: React.SFC<{
     card: {
       backgroundColor: `${theme.palette.primary.light}${snowfallToHex(
         forecast
-      )}`
+      )}`,
     },
     gridItem: {
-      width: '24vw'
+      width: '24vw',
     },
     cardActionArea: {
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
     },
     media: {
       height: 150,
       width: 150,
       marginLeft: -50,
-      marginTop: -40
-    }
+      marginTop: -40,
+    },
   })
   return (
     <Grid item xs={12} sm={6} md={4} lg={3} style={styles.gridItem}>
@@ -56,6 +57,9 @@ const Resort: React.SFC<{
           <CardActionArea style={styles.cardActionArea}>
             <CardContent>
               <List>
+                {/* <ListItem>
+                  <ListItemText primary={`${newSnow}"`} secondary="New Snow" />
+                </ListItem> */}
                 <ListItem>
                   <ListItemIcon>
                     <CardMedia

@@ -21,7 +21,7 @@ const styles = {
   }
 }
 
-const ButtonAppBar: React.SFC<{ classes: Classes }> = props => {
+const ButtonAppBar: React.FC<{ classes: Classes }> = props => {
   const { classes } = props
   return (
     <div className={classes.root}>
