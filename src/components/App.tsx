@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import Resort from './Resort'
 import { CssBaseline, Grid } from '@material-ui/core'
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import {
+  MuiThemeProvider,
+  createMuiTheme,
+  withTheme,
+  createStyles,
+} from '@material-ui/core/styles'
 import Header from './Header'
 
 const theme = createMuiTheme({
@@ -11,6 +16,13 @@ const theme = createMuiTheme({
   },
   typography: {
     useNextVariants: true,
+  },
+})
+
+const styles = createStyles({
+  gridContainer: {
+    width: '100vw',
+    margin: 'auto',
   },
 })
 
@@ -31,7 +43,12 @@ const App: React.FC = () => {
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
       <Header />
-      <Grid container spacing={16} justify="center">
+      <Grid
+        container
+        spacing={16}
+        justify="center"
+        style={styles.gridContainer}
+      >
         {forecast &&
           forecast.map((resort: Forecast) => (
             <Resort
