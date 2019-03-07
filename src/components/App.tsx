@@ -5,7 +5,6 @@ import { CssBaseline, Grid } from '@material-ui/core'
 import {
   MuiThemeProvider,
   createMuiTheme,
-  withTheme,
   createStyles,
 } from '@material-ui/core/styles'
 import Header from './Header'
