@@ -23,31 +23,28 @@ const Resort: React.FC<{
   forecast: Forecast
   mountain: Mountain
   theme: Theme
-}> = ({ forecast, mountain, theme }) => {
+  maxWeightedSnowfall: number
+}> = ({ forecast, mountain, theme, maxWeightedSnowfall }) => {
   const [expanded, setExpanded] = useState(false)
-
-  const { newSnow, last48Hours, last7Days, weatherForecast } = forecast
+  const {
+    newSnow,
+    last48Hours,
+    last7Days,
+    weightedSnowfall,
+    weatherForecast,
+  } = forecast
   const { name, logoURLString } = mountain
   const todayForecast = weatherForecast.find(day => day.daycode === 0)
   const { dayDescription, forecastString, temperatureHigh } = todayForecast
     ? todayForecast
     : { dayDescription: '', forecastString: '', temperatureHigh: '' }
 
-  const snowfallToHex = (forecast: Forecast): string => {
-    const forecastFloat = Object.values(forecast).map(
-      (snowfall: string): number => parseFloat(snowfall)
-    )
-    const [newSnow, last48Hours, last7Days] = forecastFloat
-    let weightedSnowfall = newSnow * 1.5 + last48Hours + last7Days * 0.5
-    weightedSnowfall = weightedSnowfall > 255 ? 255 : weightedSnowfall
-    return Math.floor((weightedSnowfall / 36) * 255).toString(16)
-  }
+  const snowfallToHex = (): string =>
+    Math.floor((weightedSnowfall / maxWeightedSnowfall) * 255).toString(16)
 
   const styles = createStyles({
     card: {
-      backgroundColor: `${theme.palette.primary.light}${snowfallToHex(
-        forecast
-      )}`,
+      backgroundColor: `${theme.palette.primary.light}${snowfallToHex()}`,
     },
     gridItem: {
       // width: '24vw',
@@ -76,13 +73,7 @@ const Resort: React.FC<{
       <Paper>
         <Card style={styles.card}>
           <CardHeader title={name} style={styles.cardHeader} />
-          {/* <CardActionArea style={styles.cardActionArea}> */}
           <CardContent>
-            {/* <CardMedia
-                style={styles.media}
-                image={logoURLString || 'loading image...'}
-                title={name}
-              /> */}
             <List>
               <ListItem>
                 <ListItemText primary={`${newSnow}"`} secondary="New Snow" />
@@ -97,22 +88,7 @@ const Resort: React.FC<{
                 <ListItemText primary={`${last7Days}"`} secondary="7 Days" />
               </ListItem>
             </List>
-            {/* <List>
-                <ListItem>
-                  <ListItemText
-                    primary={dayDescription}
-                    secondary={forecastString}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary={`${temperatureHigh} °F`}
-                    secondary="High"
-                  />
-                </ListItem>
-              </List> */}
           </CardContent>
-          {/* </CardActionArea> */}
           <CardActions>
             <IconButton
               style={styles.expand}
