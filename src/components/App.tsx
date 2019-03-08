@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import 'firebase/firestore'
+import firebase from './firebase'
 import Resort from './Resort'
 import { CssBaseline, Grid } from '@material-ui/core'
 import {
@@ -32,10 +34,10 @@ const App: React.FC = () => {
   useEffect(() => {
     axios(
       'https://cors-anywhere.herokuapp.com/http://www.epicmix.com/vailresorts/sites/epicmix/api/mobile/weather.ashx'
-    ).then(({ data }) => addWeightedSnowfallToForecast(data.snowconditions))
+    ).then(({ data }) => handleForecastData(data.snowconditions))
     axios(
       'https://cors-anywhere.herokuapp.com/http://www.epicmix.com/vailresorts/sites/epicmix/api/mobile/mountains.ashx'
-    ).then(({ data }) => setMountains(data.mountains))
+    ).then(({ data }) => handleMountainData(data.mountains))
   }, [])
 
   const weightedSnowfall = (forecast: Forecast): number => {
@@ -46,14 +48,55 @@ const App: React.FC = () => {
     return newSnow * 1.5 + last48Hours + last7Days * 0.5
   }
 
-  const addWeightedSnowfallToForecast = (snowconditions: any) => {
+  const addWeightedSnowfall = (snowconditions: Forecast[]): Forecast[] => {
     const forecastWithSnowfall: Forecast[] = snowconditions
       .map((forecast: Forecast) => ({
         ...forecast,
         weightedSnowfall: weightedSnowfall(forecast),
       }))
-      .sort((a: any, b: any): any => b.weightedSnowfall - a.weightedSnowfall)
+      .sort(
+        (a: Forecast, b: Forecast): number =>
+          b.weightedSnowfall - a.weightedSnowfall
+      )
+    return forecastWithSnowfall
+  }
+
+  const handleForecastData = async (snowconditions: Forecast[]) => {
+    const data = (await snowconditions)
+      ? snowconditions
+      : await getDataFromFirebase('forecasts')
+    const forecastWithSnowfall = addWeightedSnowfall(data)
+    pushToFirebase(forecastWithSnowfall, 'forecasts')
     setForecasts(forecastWithSnowfall)
+  }
+
+  const handleMountainData = async (mountains: Mountain[]) => {
+    let data: any = mountains
+    if (mountains) {
+      console.log('fire')
+      pushToFirebase(data, 'mountains')
+    } else {
+      data = await getDataFromFirebase('mountains')
+      data = data.data.data //I'm not sure why it's nested.  Not nested in firestore
+    }
+    setMountains(data)
+  }
+
+  const pushToFirebase = (data: Forecast[] | Mountain[], docName: string) => {
+    const db = firebase.firestore()
+    db.collection('data')
+      .doc(docName)
+      .set({ data })
+  }
+
+  const getDataFromFirebase = (docName: string): any => {
+    return firebase
+      .firestore()
+      .collection('data')
+      .doc(docName)
+      .get()
+      .then(doc => doc.data())
+      .then((data: any) => ({ data }))
   }
 
   return (
@@ -73,10 +116,11 @@ const App: React.FC = () => {
               forecast={forecast}
               maxWeightedSnowfall={forecasts[0].weightedSnowfall}
               mountain={
-                mountains.find(
-                  (mountain: Mountain) =>
-                    mountain.mountainID === forecast.resortID
-                ) || { mountainID: 0, name: '', logoURLString: '' }
+                (mountains[0] &&
+                  mountains.find(
+                    (mountain: Mountain) =>
+                      mountain.mountainID === forecast.resortID
+                  )) || { mountainID: 0, name: '', logoURLString: '' }
               }
             />
           ))}
