@@ -30,6 +30,7 @@ const styles = createStyles({
 const App: React.FC = () => {
   const [forecasts, setForecasts] = useState<Forecast[]>([])
   const [mountains, setMountains] = useState<Mountain[]>([])
+  const [updateTime, setUpdateTime] = useState<Date | undefined>(undefined)
 
   useEffect(() => {
     axios(
@@ -73,8 +74,8 @@ const App: React.FC = () => {
   const handleMountainData = async (mountains: Mountain[]) => {
     let data: any = mountains
     if (mountains) {
-      console.log('fire')
       pushToFirebase(data, 'mountains')
+      setUpdateTime(new Date())
     } else {
       data = await getDataFromFirebase('mountains')
       data = data.data.data //I'm not sure why it's nested.  Not nested in firestore
@@ -102,7 +103,7 @@ const App: React.FC = () => {
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
-      <Header />
+      <Header updateTime={updateTime} />
       <Grid
         container
         spacing={16}

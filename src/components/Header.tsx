@@ -10,19 +10,21 @@ import MenuIcon from '@material-ui/icons/Menu'
 const styles = {
   root: {
     flexGrow: 1,
-    marginBottom: 16
+    marginBottom: 16,
   },
   grow: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   menuButton: {
     marginLeft: -12,
-    marginRight: 20
-  }
+    marginRight: 20,
+  },
 }
 
-const ButtonAppBar: React.FC<{ classes: Classes }> = props => {
-  const { classes } = props
+const ButtonAppBar: React.FC<{
+  classes: Classes
+  updateTime: Date | undefined
+}> = ({ classes, updateTime }) => {
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -36,6 +38,11 @@ const ButtonAppBar: React.FC<{ classes: Classes }> = props => {
           </IconButton>
           <Typography variant="h6" color="inherit" className={classes.grow}>
             SnowCast
+          </Typography>
+          <Typography variant="h6" color="inherit" className={classes.grow}>
+            {updateTime
+              ? `Last updated at ${updateTime && updateTime.toLocaleString()}`
+              : `Data from cache`}
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>
