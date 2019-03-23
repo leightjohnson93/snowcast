@@ -13,7 +13,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 const styles = {
   root: {
     flexGrow: 1,
-    marginBottom: 16,
+    paddingBottom: 6,
   },
   title: {
     flexGrow: 1,
