@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { withTheme, createStyles } from '@material-ui/core/styles'
+import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import Card from '@material-ui/core/Card'
@@ -16,8 +17,7 @@ import Collapse from '@material-ui/core/Collapse'
 import IconButton from '@material-ui/core/IconButton'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Typography from '@material-ui/core/Typography'
-import { Forecast, Mountain, Theme } from './App'
-import classes from '*.module.scss'
+import { Forecast, Mountain, Theme } from '../interfaces'
 
 const Resort: React.FC<{
   forecast: Forecast
@@ -47,7 +47,7 @@ const Resort: React.FC<{
       backgroundColor: `${theme.palette.primary.light}${snowfallToHex()}`,
     },
     gridItem: {
-      // width: '24vw',
+      padding: useMediaQuery('(max-width:600px)') ? '8px 0px' : '8px 8px',
     },
     cardHeader: {
       textAlign: 'center',

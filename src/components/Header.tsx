@@ -1,4 +1,7 @@
 import React from 'react'
+import { distanceInWordsToNow } from 'date-fns'
+import { Classes } from '../interfaces'
+import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery'
 import { withStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -12,49 +15,51 @@ const styles = {
     flexGrow: 1,
     marginBottom: 16,
   },
-  grow: {
+  title: {
     flexGrow: 1,
   },
   menuButton: {
     marginLeft: -12,
     marginRight: 20,
   },
+  timestamp: {
+    padding: '10px 10px',
+    flexGrow: 1,
+    ['@media (max-width:600px)']: {
+      fontSize: 14,
+    },
+  },
 }
 
 const ButtonAppBar: React.FC<{
   classes: Classes
-  updateTime: Date | undefined
-}> = ({ classes, updateTime }) => {
-  return (
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="Menu"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            SnowCast
-          </Typography>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            {updateTime
-              ? `Last updated at ${updateTime && updateTime.toLocaleString()}`
-              : `Data from cache`}
-          </Typography>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-      </AppBar>
-    </div>
-  )
-}
-
-interface Classes {
-  root: string
-  menuButton: string
-  grow: string
-}
+  updateTime: Date | null
+}> = ({ classes, updateTime }) => (
+  <div className={classes.root}>
+    <AppBar position="static">
+      <Toolbar>
+        <IconButton
+          className={classes.menuButton}
+          color="inherit"
+          aria-label="Menu"
+        >
+          <MenuIcon />
+        </IconButton>
+        <Typography variant="h6" color="inherit" className={classes.title}>
+          SnowCast
+        </Typography>
+        <Typography
+          variant="h6"
+          color="inherit"
+          align={useMediaQuery('(max-width:450px)') ? 'center' : 'left'}
+          className={classes.timestamp}
+        >
+          {updateTime && `Updated ${distanceInWordsToNow(updateTime)} ago`}
+        </Typography>
+        <Button color="inherit">Login</Button>
+      </Toolbar>
+    </AppBar>
+  </div>
+)
 
 export default withStyles(styles)(ButtonAppBar)

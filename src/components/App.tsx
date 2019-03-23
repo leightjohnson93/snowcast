@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import 'firebase/firestore'
-import firebase from './firebase'
+import firebase from '../firebase'
 import Resort from './Resort'
+import { Forecast, Mountain, Theme } from '../interfaces'
 import { CssBaseline, Grid } from '@material-ui/core'
 import {
   MuiThemeProvider,
@@ -30,7 +31,7 @@ const styles = createStyles({
 const App: React.FC = () => {
   const [forecasts, setForecasts] = useState<Forecast[]>([])
   const [mountains, setMountains] = useState<Mountain[]>([])
-  const [updateTime, setUpdateTime] = useState<Date | undefined>(undefined)
+  const [updateTime, setUpdateTime] = useState<Date | null>(null)
 
   useEffect(() => {
     axios(
@@ -42,10 +43,18 @@ const App: React.FC = () => {
   }, [])
 
   const weightedSnowfall = (forecast: Forecast): number => {
-    const forecastFloat = Object.values(forecast).map(
-      (snowfall: string): number => parseFloat(snowfall)
-    )
-    const [newSnow, last48Hours, last7Days] = forecastFloat
+    const snowfallArray: number[] = new Array(3)
+    for (let snowfall in forecast) {
+      switch (snowfall) {
+        case 'newSnow':
+          snowfallArray[0] = parseInt(forecast.newSnow)
+        case 'last48Hours':
+          snowfallArray[1] = parseInt(forecast.last48Hours)
+        case 'last7Days':
+          snowfallArray[2] = parseInt(forecast.last7Days)
+      }
+    }
+    const [newSnow, last48Hours, last7Days] = snowfallArray
     return newSnow * 1.5 + last48Hours + last7Days * 0.5
   }
 
@@ -63,41 +72,44 @@ const App: React.FC = () => {
   }
 
   const handleForecastData = async (snowconditions: Forecast[]) => {
-    const data = (await snowconditions)
-      ? snowconditions
-      : await getDataFromFirebase('forecasts')
+    let data = snowconditions
+    snowconditions
+      ? pushToFirebase(data, 'forecasts')
+      : (data = await getDataFromFirebase('forecasts'))
     const forecastWithSnowfall = addWeightedSnowfall(data)
-    pushToFirebase(forecastWithSnowfall, 'forecasts')
     setForecasts(forecastWithSnowfall)
   }
 
   const handleMountainData = async (mountains: Mountain[]) => {
-    let data: any = mountains
-    if (mountains) {
-      pushToFirebase(data, 'mountains')
-      setUpdateTime(new Date())
-    } else {
-      data = await getDataFromFirebase('mountains')
-      data = data.data.data //I'm not sure why it's nested.  Not nested in firestore
-    }
+    let data = mountains
+    mountains
+      ? pushToFirebase(data, 'mountains')
+      : (data = await getDataFromFirebase('mountains'))
+
     setMountains(data)
   }
 
-  const pushToFirebase = (data: Forecast[] | Mountain[], docName: string) => {
-    const db = firebase.firestore()
-    db.collection('data')
-      .doc(docName)
-      .set({ data })
+  const pushToFirebase = (
+    data: (Forecast | Mountain)[],
+    docName: 'mountains' | 'forecasts'
+  ) => {
+    const collection = firebase.firestore().collection('data')
+    collection.doc(docName).set({ [docName]: data })
+    if (docName === 'forecasts')
+      collection.doc('timestamp').set({ timestamp: new Date() })
   }
 
-  const getDataFromFirebase = (docName: string): any => {
-    return firebase
-      .firestore()
-      .collection('data')
+  const getDataFromFirebase = (docName: 'mountains' | 'forecasts'): any => {
+    const collection = firebase.firestore().collection('data')
+    if (docName === 'forecasts')
+      collection
+        .doc('timestamp')
+        .get()
+        .then(date => setUpdateTime(date.data()!.timestamp.toDate()))
+    return collection
       .doc(docName)
       .get()
-      .then(doc => doc.data())
-      .then((data: any) => ({ data }))
+      .then(doc => doc.data()![docName])
   }
 
   return (
@@ -128,37 +140,6 @@ const App: React.FC = () => {
       </Grid>
     </MuiThemeProvider>
   )
-}
-
-export interface Forecast {
-  resortID: number
-  newSnow: string
-  last48Hours: string
-  last7Days: string
-  weightedSnowfall: number
-  weatherForecast: [
-    {
-      daycode: number
-      dayDescription: string
-      forecastString: string
-      iconName: string
-      summaryDescription: string
-      temperatureHigh: string
-      temperatureLow: string
-    }
-  ]
-}
-
-export interface Mountain {
-  mountainID: number
-  name: string
-  logoURLString: string
-}
-
-export interface Theme {
-  palette: {
-    primary: { main: string; light: string; dark: string }
-  }
 }
 
 export default App
