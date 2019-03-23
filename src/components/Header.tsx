@@ -1,5 +1,9 @@
 import React from 'react'
+<<<<<<< HEAD
 const { Offline, Online } = require('react-detect-offline')
+=======
+const { Offline } = require('react-detect-offline')
+>>>>>>> ac8d6b99872868f4675cb1886d80b2015bc4c876
 import { distanceInWordsToNow } from 'date-fns'
 import { Classes } from '../interfaces'
 import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery'
@@ -55,10 +59,11 @@ const ButtonAppBar: React.FC<{
           align={useMediaQuery('(max-width:450px)') ? 'center' : 'left'}
           className={classes.timestamp}
         >
-          <Online>
-            {updateTime && `Updated ${distanceInWordsToNow(updateTime)} ago`}
-          </Online>
-          <Offline>Offline</Offline>
+          {updateTime ? (
+            `Updated ${distanceInWordsToNow(updateTime)} ago`
+          ) : (
+            <Offline>Offline</Offline>
+          )}
         </Typography>
         <Button color="inherit">Login</Button>
       </Toolbar>
