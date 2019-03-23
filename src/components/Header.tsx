@@ -55,11 +55,10 @@ const ButtonAppBar: React.FC<{
           align={useMediaQuery('(max-width:450px)') ? 'center' : 'left'}
           className={classes.timestamp}
         >
-          {updateTime ? (
-            `Updated ${distanceInWordsToNow(updateTime)} ago`
-          ) : (
-            <Offline>Offline</Offline>
-          )}
+          <Online>
+            {updateTime && `Updated ${distanceInWordsToNow(updateTime)} ago`}
+          </Online>
+          <Offline>Offline</Offline>
         </Typography>
         <Button color="inherit">Login</Button>
       </Toolbar>
