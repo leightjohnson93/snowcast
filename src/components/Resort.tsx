@@ -67,7 +67,7 @@ const Resort: React.FC<{
   })
 
   return (
-    <Grid item sm={12} md={6} lg={4} xl={3} style={styles.gridItem}>
+    <Grid item xs={12} sm={12} md={6} lg={4} xl={3} style={styles.gridItem}>
       <Paper>
         <Card style={styles.card}>
           <CardHeader title={name} style={styles.cardHeader} />
