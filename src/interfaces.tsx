@@ -4,6 +4,7 @@ export interface Forecast {
   last48Hours: string
   last7Days: string
   weightedSnowfall: number
+  mountain: Mountain | undefined
   weatherForecast: [
     {
       daycode: number

@@ -7,9 +7,13 @@ import { withStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
+import FilledInput from '@material-ui/core/FilledInput'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
 
 const styles = {
   root: {
@@ -35,7 +39,9 @@ const styles = {
 const ButtonAppBar: React.FC<{
   classes: Classes
   updateTime: Date | null
-}> = ({ classes, updateTime }) => (
+  sortBy: string
+  setSortBy: Function
+}> = ({ classes, updateTime, sortBy, setSortBy }) => (
   <div className={classes.root}>
     <AppBar position="static">
       <Toolbar>
@@ -60,7 +66,19 @@ const ButtonAppBar: React.FC<{
           </Online>
           <Offline>Offline</Offline>
         </Typography>
-        <Button color="inherit">Login</Button>
+        <FormControl>
+          <InputLabel>Sort</InputLabel>
+          <Select
+            color="white"
+            value={sortBy}
+            onChange={e => setSortBy(e.target.value)}
+            input={<FilledInput name="sort" />}
+          >
+            <MenuItem value="snowfall">Snowfall</MenuItem>
+            <MenuItem value="temperature">Temperature</MenuItem>
+            <MenuItem value="name">Name</MenuItem>
+          </Select>
+        </FormControl>
       </Toolbar>
     </AppBar>
   </div>

@@ -32,44 +32,64 @@ const App: React.FC = () => {
   const [forecasts, setForecasts] = useState<Forecast[]>([])
   const [mountains, setMountains] = useState<Mountain[]>([])
   const [updateTime, setUpdateTime] = useState<Date | null>(null)
+  const [sortBy, setSortBy] = useState<string>('snowfall')
 
   useEffect(() => {
     axios(
-      'https://cors-anywhere.herokuapp.com/http://www.epicmix.com/vailresorts/sites/epicmix/api/mobile/weather.ashx'
-    ).then(({ data }) => handleForecastData(data.snowconditions))
-    axios(
       'https://cors-anywhere.herokuapp.com/http://www.epicmix.com/vailresorts/sites/epicmix/api/mobile/mountains.ashx'
     ).then(({ data }) => handleMountainData(data.mountains))
+    axios(
+      'https://cors-anywhere.herokuapp.com/http://www.epicmix.com/vailresorts/sites/epicmix/api/mobile/weather.ashx'
+    ).then(({ data }) => handleForecastData(data.snowconditions))
   }, [])
 
-  const weightedSnowfall = (forecast: Forecast): number => {
-    const snowfallArray: number[] = new Array(3)
-    for (let snowfall in forecast) {
-      switch (snowfall) {
-        case 'newSnow':
-          snowfallArray[0] = parseInt(forecast.newSnow)
-        case 'last48Hours':
-          snowfallArray[1] = parseInt(forecast.last48Hours)
-        case 'last7Days':
-          snowfallArray[2] = parseInt(forecast.last7Days)
-      }
+  useEffect(() => {
+    let sortedForecasts: Forecast[] = forecasts
+    switch (sortBy) {
+      case 'snowfall':
+        sortedForecasts = forecasts.sort(
+          (a: Forecast, b: Forecast): number =>
+            b.weightedSnowfall - a.weightedSnowfall
+        )
+        break
+      case 'temperature':
+        sortedForecasts = forecasts.sort(
+          (a: Forecast, b: Forecast): number =>
+            parseInt(b.weatherForecast[0].temperatureHigh) -
+            parseInt(a.weatherForecast[0].temperatureHigh)
+        )
+        break
+      case 'name':
+        const forecastsWithName = forecasts.map(forecast => ({
+          ...forecast,
+          mountain: mountains.find(
+            mountain => mountain.mountainID === forecast.resortID
+          ),
+        }))
+        sortedForecasts = forecastsWithName.sort(
+          (a: any, b: any): number => {
+            if (a.mountain.name < b.mountain.name) return -1
+            if (a.mountain.name > b.mountain.name) return 1
+            return 0
+          }
+        )
     }
-    const [newSnow, last48Hours, last7Days] = snowfallArray
-    return newSnow * 1.5 + last48Hours + last7Days * 0.5
-  }
+    setForecasts(sortedForecasts)
+  }, [sortBy])
 
-  const addWeightedSnowfall = (snowconditions: Forecast[]): Forecast[] => {
-    const forecastWithSnowfall: Forecast[] = snowconditions
+  const addWeightedSnowfall = (snowconditions: Forecast[]): Forecast[] =>
+    snowconditions
       .map((forecast: Forecast) => ({
         ...forecast,
-        weightedSnowfall: weightedSnowfall(forecast),
+        weightedSnowfall:
+          parseInt(forecast.newSnow) * 1.5 +
+          parseInt(forecast.last48Hours) +
+          parseInt(forecast.last7Days) * 0.5,
       }))
       .sort(
         (a: Forecast, b: Forecast): number =>
           b.weightedSnowfall - a.weightedSnowfall
       )
-    return forecastWithSnowfall
-  }
 
   const handleForecastData = async (snowconditions: Forecast[]) => {
     let data = snowconditions
@@ -85,7 +105,6 @@ const App: React.FC = () => {
     mountains
       ? pushToFirebase(data, 'mountains')
       : (data = await getDataFromFirebase('mountains'))
-
     setMountains(data)
   }
 
@@ -115,7 +134,7 @@ const App: React.FC = () => {
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
-      <Header updateTime={updateTime} />
+      <Header updateTime={updateTime} sortBy={sortBy} setSortBy={setSortBy} />
       <Grid
         container
         spacing={16}

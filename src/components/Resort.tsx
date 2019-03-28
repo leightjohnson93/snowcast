@@ -35,26 +35,21 @@ const Resort: React.FC<{
   } = forecast
   const { name, logoURLString } = mountain
 
-  const getDayForecast = (dayInt: number) => {
-    const todayForecast = weatherForecast.find(day => day.daycode === dayInt)
-    return todayForecast
-      ? todayForecast
-      : { dayDescription: '', forecastString: '', temperatureHigh: '' }
-  }
-
   const snowfallToHex = (): string =>
     Math.floor((weightedSnowfall / maxWeightedSnowfall) * 255).toString(16)
 
   const styles = createStyles({
     card: {
       backgroundColor: `${theme.palette.primary.light}${snowfallToHex()}`,
-      height: expanded ? 'auto' : 400,
     },
     gridItem: {
       padding: useMediaQuery('(max-width:600px)') ? '8px 0px' : '8px 8px',
     },
     cardHeader: {
       textAlign: 'center',
+    },
+    forecastToday: {
+      height: 250,
     },
     weatherToday: {
       maxWidth: 225,
@@ -71,7 +66,7 @@ const Resort: React.FC<{
       <Paper>
         <Card style={styles.card}>
           <CardHeader title={name} style={styles.cardHeader} />
-          <CardContent>
+          <CardContent style={styles.forecastToday}>
             <Grid container justify="space-around">
               <Grid item>
                 <List>
