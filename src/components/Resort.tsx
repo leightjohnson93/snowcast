@@ -7,6 +7,7 @@ import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
+import Avatar from '@material-ui/core/Avatar'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
@@ -48,6 +49,9 @@ const Resort: React.FC<{
     cardHeader: {
       textAlign: 'center',
     },
+    avatar: {
+      mixBlendMode: 'inherit',
+    },
     forecastToday: {
       height: 250,
     },
@@ -65,7 +69,17 @@ const Resort: React.FC<{
     <Grid item xs={12} sm={12} md={6} lg={4} xl={3} style={styles.gridItem}>
       <Paper>
         <Card style={styles.card}>
-          <CardHeader title={name} style={styles.cardHeader} />
+          <CardHeader
+            title={name}
+            style={styles.cardHeader}
+            avatar={
+              <Avatar
+                src={logoURLString}
+                alt="resort logo"
+                style={styles.avatar}
+              />
+            }
+          />
           <CardContent style={styles.forecastToday}>
             <Grid container justify="space-around">
               <Grid item>

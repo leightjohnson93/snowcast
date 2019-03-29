@@ -34,6 +34,9 @@ const styles = {
       fontSize: 14,
     },
   },
+  input: {
+    color: '#85f3ff',
+  },
 }
 
 const ButtonAppBar: React.FC<{
@@ -67,12 +70,11 @@ const ButtonAppBar: React.FC<{
           <Offline>Offline</Offline>
         </Typography>
         <FormControl>
-          <InputLabel>Sort</InputLabel>
+          <InputLabel focused>Sort</InputLabel>
           <Select
-            color="white"
             value={sortBy}
             onChange={e => setSortBy(e.target.value)}
-            input={<FilledInput name="sort" />}
+            input={<FilledInput name="sort" style={styles.input} />}
           >
             <MenuItem value="snowfall">Snowfall</MenuItem>
             <MenuItem value="temperature">Temperature</MenuItem>
