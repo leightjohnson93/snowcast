@@ -46,9 +46,6 @@ const Resort: React.FC<{
     gridItem: {
       padding: useMediaQuery('(max-width:600px)') ? '8px 0px' : '8px 8px',
     },
-    cardHeader: {
-      // textAlign: 'center',
-    },
     avatar: {
       width: 100,
       height: 100,
@@ -60,7 +57,7 @@ const Resort: React.FC<{
       maxWidth: 225,
     },
     expand: {
-      transform: expanded ? `rotate(180deg)` : 'rotate(0deg)',
+      transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
       marginLeft: 'auto',
       marginTop: 'auto',
     },
@@ -72,7 +69,6 @@ const Resort: React.FC<{
         <Card style={styles.card}>
           <CardHeader
             title={<Typography variant="h4">{name}</Typography>}
-            style={styles.cardHeader}
             disableTypography
             avatar={
               <Avatar

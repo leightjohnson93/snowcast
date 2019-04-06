@@ -10,6 +10,7 @@ import {
   createMuiTheme,
   createStyles,
 } from '@material-ui/core/styles'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import Header from './Header'
 
 const theme = createMuiTheme({
@@ -135,27 +136,27 @@ const App: React.FC = () => {
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
       <Header updateTime={updateTime} sortBy={sortBy} setSortBy={setSortBy} />
+      {!forecasts.length && <LinearProgress />}
       <Grid
         container
         spacing={16}
         justify="center"
         style={styles.gridContainer}
       >
-        {forecasts &&
-          forecasts.map((forecast: Forecast) => (
-            <Resort
-              key={forecast.resortID}
-              forecast={forecast}
-              maxWeightedSnowfall={forecasts[0].weightedSnowfall}
-              mountain={
-                (mountains[0] &&
-                  mountains.find(
-                    (mountain: Mountain) =>
-                      mountain.mountainID === forecast.resortID
-                  )) || { mountainID: 0, name: '', logoURLString: '' }
-              }
-            />
-          ))}
+        {forecasts.map((forecast: Forecast) => (
+          <Resort
+            key={forecast.resortID}
+            forecast={forecast}
+            maxWeightedSnowfall={forecasts[0].weightedSnowfall}
+            mountain={
+              (mountains[0] &&
+                mountains.find(
+                  (mountain: Mountain) =>
+                    mountain.mountainID === forecast.resortID
+                )) || { mountainID: 0, name: '', logoURLString: '' }
+            }
+          />
+        ))}
       </Grid>
     </MuiThemeProvider>
   )
