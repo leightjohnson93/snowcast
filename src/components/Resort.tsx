@@ -47,10 +47,11 @@ const Resort: React.FC<{
       padding: useMediaQuery('(max-width:600px)') ? '8px 0px' : '8px 8px',
     },
     cardHeader: {
-      textAlign: 'center',
+      // textAlign: 'center',
     },
     avatar: {
-      mixBlendMode: 'inherit',
+      width: 100,
+      height: 100,
     },
     forecastToday: {
       height: 250,
@@ -70,8 +71,9 @@ const Resort: React.FC<{
       <Paper>
         <Card style={styles.card}>
           <CardHeader
-            title={name}
+            title={<Typography variant="h4">{name}</Typography>}
             style={styles.cardHeader}
+            disableTypography
             avatar={
               <Avatar
                 src={logoURLString}

@@ -3,7 +3,7 @@ import axios from 'axios'
 import 'firebase/firestore'
 import firebase from '../firebase'
 import Resort from './Resort'
-import { Forecast, Mountain, Theme } from '../interfaces'
+import { Forecast, Mountain } from '../interfaces'
 import { CssBaseline, Grid } from '@material-ui/core'
 import {
   MuiThemeProvider,
