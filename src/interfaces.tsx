@@ -35,4 +35,5 @@ export interface Classes {
   menuButton: string
   title: string
   timestamp: string
+  logo: string
 }
