@@ -83,13 +83,22 @@ const Resort: React.FC<{
               <Grid item>
                 <List>
                   <ListItem>
-                    <ListItemText primary={newSnow} secondary="New Snow" />
+                    <ListItemText
+                      primary={`${newSnow}"`}
+                      secondary="New Snow"
+                    />
                   </ListItem>
                   <ListItem>
-                    <ListItemText primary={last48Hours} secondary="48 Hours" />
+                    <ListItemText
+                      primary={`${last48Hours}"`}
+                      secondary="48 Hours"
+                    />
                   </ListItem>
                   <ListItem>
-                    <ListItemText primary={last7Days} secondary="7 Days" />
+                    <ListItemText
+                      primary={`${last7Days}"`}
+                      secondary="7 Days"
+                    />
                   </ListItem>
                 </List>
               </Grid>
