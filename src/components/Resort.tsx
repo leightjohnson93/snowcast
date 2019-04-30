@@ -83,22 +83,13 @@ const Resort: React.FC<{
               <Grid item>
                 <List>
                   <ListItem>
-                    <ListItemText
-                      primary={`${newSnow}"`}
-                      secondary="New Snow"
-                    />
+                    <ListItemText primary={newSnow} secondary="New Snow" />
                   </ListItem>
                   <ListItem>
-                    <ListItemText
-                      primary={`${last48Hours}"`}
-                      secondary="48 Hours"
-                    />
+                    <ListItemText primary={last48Hours} secondary="48 Hours" />
                   </ListItem>
                   <ListItem>
-                    <ListItemText
-                      primary={`${last7Days}"`}
-                      secondary="7 Days"
-                    />
+                    <ListItemText primary={last7Days} secondary="7 Days" />
                   </ListItem>
                 </List>
               </Grid>
@@ -139,7 +130,7 @@ const Resort: React.FC<{
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent>
               <Grid container>
-                {weatherForecast.slice(1).map(dayForecast => (
+                {weatherForecast.map(dayForecast => (
                   <Grid item key={dayForecast.daycode}>
                     <Typography variant="h6">
                       {dayForecast.dayDescription}
