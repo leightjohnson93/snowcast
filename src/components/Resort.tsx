@@ -4,13 +4,10 @@ import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMe
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import Card from '@material-ui/core/Card'
-import CardActionArea from '@material-ui/core/CardActionArea'
 import CardContent from '@material-ui/core/CardContent'
-import CardMedia from '@material-ui/core/CardMedia'
 import Avatar from '@material-ui/core/Avatar'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardActions from '@material-ui/core/CardActions'
@@ -51,7 +48,7 @@ const Resort: React.FC<{
       height: 100,
     },
     forecastToday: {
-      height: 250,
+      height: weatherForecast[0] ? 250 : 314,
     },
     weatherToday: {
       maxWidth: 225,
@@ -78,64 +75,78 @@ const Resort: React.FC<{
               />
             }
           />
-          <CardContent style={styles.forecastToday}>
-            <Grid container justify="space-around">
-              <Grid item>
-                <List>
-                  <ListItem>
-                    <ListItemText
-                      primary={`${newSnow}"`}
-                      secondary="New Snow"
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText
-                      primary={`${last48Hours}"`}
-                      secondary="48 Hours"
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText
-                      primary={`${last7Days}"`}
-                      secondary="7 Days"
-                    />
-                  </ListItem>
-                </List>
-              </Grid>
-              <Grid item style={styles.weatherToday}>
-                <List>
-                  <ListItem>
-                    <ListItemText
-                      primary={weatherForecast[0].summaryDescription}
-                      secondary="Weather"
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText
-                      primary={`${weatherForecast[0].temperatureHigh} °F`}
-                      secondary="High"
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText
-                      primary={`${weatherForecast[0].temperatureLow} °F`}
-                      secondary="Low"
-                    />
-                  </ListItem>
-                </List>
-              </Grid>
-            </Grid>
-          </CardContent>
-          <CardActions style={{ bottom: 0 }}>
-            <IconButton
-              style={styles.expand}
-              onClick={() => setExpanded(!expanded)}
-              aria-expanded={expanded}
-              aria-label="Show more"
-            >
-              <ExpandMoreIcon />
-            </IconButton>
-          </CardActions>
+          {weatherForecast[0] ? (
+            <>
+              <CardContent style={styles.forecastToday}>
+                <Grid container justify="space-around">
+                  <Grid item>
+                    <List>
+                      <ListItem>
+                        <ListItemText
+                          primary={`${newSnow}"`}
+                          secondary="New Snow"
+                        />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemText
+                          primary={`${last48Hours}"`}
+                          secondary="48 Hours"
+                        />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemText
+                          primary={`${last7Days}"`}
+                          secondary="7 Days"
+                        />
+                      </ListItem>
+                    </List>
+                  </Grid>
+                  <Grid item style={styles.weatherToday}>
+                    <List>
+                      <ListItem>
+                        <ListItemText
+                          primary={weatherForecast[0].summaryDescription}
+                          secondary="Weather"
+                        />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemText
+                          primary={`${weatherForecast[0].temperatureHigh} °F`}
+                          secondary="High"
+                        />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemText
+                          primary={`${weatherForecast[0].temperatureLow} °F`}
+                          secondary="Low"
+                        />
+                      </ListItem>
+                    </List>
+                  </Grid>
+                </Grid>
+              </CardContent>
+              <CardActions style={{ bottom: 0 }}>
+                <IconButton
+                  style={styles.expand}
+                  onClick={() => setExpanded(!expanded)}
+                  aria-expanded={expanded}
+                  aria-label="Show more"
+                >
+                  <ExpandMoreIcon />
+                </IconButton>
+              </CardActions>
+            </>
+          ) : (
+            <CardContent style={styles.forecastToday}>
+              <Typography variant="h6" align="center" gutterBottom>
+                No Data
+              </Typography>
+              <Typography variant="h4" align="center">
+                😕
+              </Typography>
+            </CardContent>
+          )}
+
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent>
               <Grid container>
