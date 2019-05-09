@@ -93,7 +93,7 @@ const Epic: React.FC = () => {
       )
 
   const handleForecastData = async (snowconditions: Forecast[]) => {
-    let data = snowconditions
+    let data = snowconditions.filter(forecast => forecast.weatherForecast[0])
     snowconditions
       ? pushToFirebase(data, 'forecasts')
       : (data = await getDataFromFirebase('forecasts'))
@@ -140,7 +140,7 @@ const Epic: React.FC = () => {
       <Grid
         container
         spacing={16}
-        justify="center"
+        justify="flex-start"
         style={styles.gridContainer}
       >
         {forecasts.map((forecast: Forecast) => (

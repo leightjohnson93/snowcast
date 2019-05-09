@@ -7,7 +7,7 @@
     "@material-ui/icons": "^3.0.2",
     "@types/jest": "24.0.0",
     "@types/node": "10.12.24",
-    "@types/react": "16.8.2",
+    "@types/react": "^16.8.17",
     "@types/react-dom": "16.8.0",
     "axios": "^0.18.0",
     "date-fns": "^1.30.1",

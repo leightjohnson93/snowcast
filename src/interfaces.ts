@@ -36,4 +36,10 @@ export interface Classes {
   title: string
   timestamp: string
   logo: string
+  transparent: string
+}
+
+export interface ContextInterface {
+  pass: string
+  setPass: Function
 }

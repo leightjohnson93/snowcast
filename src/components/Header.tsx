@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { Context } from '../Context'
 const { Offline, Online } = require('react-detect-offline')
 import epicLogo from '../images/epic.png'
 import ikonLogo from '../images/ikon.png'
@@ -43,7 +44,10 @@ const styles = {
   },
   logo: {
     height: 55,
-    // width: 180,
+  },
+  transparent: {
+    opacity: 0.35,
+    height: 55,
   },
 }
 
@@ -52,45 +56,67 @@ const ButtonAppBar: React.FC<{
   updateTime: Date | null
   sortBy: string
   setSortBy: Function
-}> = ({ classes, updateTime, sortBy, setSortBy }) => (
-  <div className={classes.root}>
-    <AppBar position="static">
-      <Toolbar>
-        <Typography variant="h6" color="inherit" className={classes.title}>
-          SnowCast
-        </Typography>
-        <Button>
-          <img src={epicLogo} className={classes.logo} />
-        </Button>
-        <Button>
-          <img src={ikonLogo} className={classes.logo} />
-        </Button>
-        <Typography
-          variant="h6"
-          color="inherit"
-          align={useMediaQuery('(max-width:450px)') ? 'center' : 'left'}
-          className={classes.timestamp}
-        >
-          <Online>
-            {updateTime && `Updated ${distanceInWordsToNow(updateTime)} ago`}
-          </Online>
-          <Offline>Offline</Offline>
-        </Typography>
-        <FormControl>
-          <InputLabel focused>Sort</InputLabel>
-          <Select
-            value={sortBy}
-            onChange={e => setSortBy(e.target.value)}
-            input={<FilledInput name="sort" style={styles.input} />}
+}> = ({ classes, updateTime, sortBy, setSortBy }) => {
+  const { pass, setPass } = useContext(Context)
+  const isEpic = pass === 'epic'
+  return (
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" color="inherit" className={classes.title}>
+            SnowCast
+          </Typography>
+
+          <Button
+            name="epic"
+            disabled={isEpic}
+            onClick={() => {
+              setPass('epic')
+            }}
           >
-            <MenuItem value="snowfall">Snowfall</MenuItem>
-            <MenuItem value="temperature">Temperature</MenuItem>
-            <MenuItem value="name">Name</MenuItem>
-          </Select>
-        </FormControl>
-      </Toolbar>
-    </AppBar>
-  </div>
-)
+            <img
+              src={epicLogo}
+              className={isEpic ? classes.logo : classes.transparent}
+            />
+          </Button>
+          <Button
+            name="ikon"
+            disabled={!isEpic}
+            onClick={() => setPass('ikon')}
+          >
+            <img
+              src={ikonLogo}
+              className={!isEpic ? classes.logo : classes.transparent}
+            />
+          </Button>
+
+          <Typography
+            variant="h6"
+            color="inherit"
+            align={useMediaQuery('(max-width:450px)') ? 'center' : 'left'}
+            className={classes.timestamp}
+          >
+            <Online>
+              {updateTime && `Updated ${distanceInWordsToNow(updateTime)} ago`}
+            </Online>
+            <Offline>Offline</Offline>
+          </Typography>
+          <FormControl>
+            <InputLabel focused>Sort</InputLabel>
+            <Select
+              value={sortBy}
+              onChange={e => setSortBy(e.target.value)}
+              input={<FilledInput name="sort" style={styles.input} />}
+            >
+              <MenuItem value="snowfall">Snowfall</MenuItem>
+              <MenuItem value="temperature">Temperature</MenuItem>
+              <MenuItem value="name">Name</MenuItem>
+            </Select>
+          </FormControl>
+        </Toolbar>
+      </AppBar>
+    </div>
+  )
+}
 
 export default withStyles(styles)(ButtonAppBar)
