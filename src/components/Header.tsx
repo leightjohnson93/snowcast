@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { Context } from '../Context'
-const { Offline, Online } = require('react-detect-offline')
 import epicLogo from '../images/epic.png'
 import ikonLogo from '../images/ikon.png'
 import { distanceInWordsToNow } from 'date-fns'
@@ -53,10 +52,10 @@ const styles = {
 
 const ButtonAppBar: React.FC<{
   classes: Classes
-  updateTime: Date | null
+
   sortBy: string
   setSortBy: Function
-}> = ({ classes, updateTime, sortBy, setSortBy }) => {
+}> = ({ classes, sortBy, setSortBy }) => {
   const { pass, setPass } = useContext(Context)
   const isEpic = pass === 'epic'
   return (
@@ -95,12 +94,7 @@ const ButtonAppBar: React.FC<{
             color="inherit"
             align={useMediaQuery('(max-width:450px)') ? 'center' : 'left'}
             className={classes.timestamp}
-          >
-            <Online>
-              {updateTime && `Updated ${distanceInWordsToNow(updateTime)} ago`}
-            </Online>
-            <Offline>Offline</Offline>
-          </Typography>
+          />
           <FormControl>
             <InputLabel focused>Sort</InputLabel>
             <Select

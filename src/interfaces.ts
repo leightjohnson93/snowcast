@@ -24,6 +24,14 @@ export interface Mountain {
   logoURLString: string
 }
 
+export interface Resort {
+  _id: number
+  pastSnow: {
+    sum3: number
+    snow0day: number
+  }
+}
+
 export interface Theme {
   palette: {
     primary: { main: string; light: string; dark: string }
