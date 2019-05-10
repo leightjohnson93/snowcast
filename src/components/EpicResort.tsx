@@ -20,7 +20,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Typography from '@material-ui/core/Typography'
 import { Forecast, Mountain, Theme } from '../interfaces'
 
-const Resort: React.FC<{
+const EpicResort: React.FC<{
   forecast: Forecast
   mountain: Mountain
   theme: Theme
@@ -158,4 +158,4 @@ const Resort: React.FC<{
   )
 }
 
-export default withTheme()(Resort)
+export default withTheme()(EpicResort)

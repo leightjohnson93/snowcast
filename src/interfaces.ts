@@ -25,11 +25,20 @@ export interface Mountain {
 }
 
 export interface Resort {
-  _id: number
+  resort_id: number
   pastSnow: {
     sum3: number
     snow0day: number
   }
+  primaryRegion: {
+    country: string
+  }
+  snowcone: {
+    active_date_epoch: number
+  }
+  weightedSnowfall: number
+  resort_name_short: string
+  name: string
 }
 
 export interface Theme {

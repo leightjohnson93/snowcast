@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import Resort from './Resort'
+import EpicResort from './EpicResort'
 import { Forecast, Mountain } from '../interfaces'
 import { CssBaseline, Grid } from '@material-ui/core'
 import { createMuiTheme, createStyles } from '@material-ui/core/styles'
@@ -25,7 +25,7 @@ const Epic: React.FC = () => {
     ).then(({ data }) => setMountains(data.mountains))
     axios(
       'https://cors-anywhere.herokuapp.com/http://www.epicmix.com/vailresorts/sites/epicmix/api/mobile/weather.ashx'
-    ).then(({ data }) => handleForecastData(data.snowconditions))
+    ).then(({ data }) => setForecasts(addWeightedSnowfall(data.snowconditions)))
   }, [])
 
   useEffect(() => {
@@ -76,13 +76,6 @@ const Epic: React.FC = () => {
           b.weightedSnowfall - a.weightedSnowfall
       )
 
-  const handleForecastData = async (snowconditions: Forecast[]) =>
-    setForecasts(
-      addWeightedSnowfall(
-        snowconditions.filter(forecast => forecast.weatherForecast[0])
-      )
-    )
-
   return (
     <>
       <Header sortBy={sortBy} setSortBy={setSortBy} />
@@ -94,7 +87,7 @@ const Epic: React.FC = () => {
         style={styles.gridContainer}
       >
         {forecasts.map((forecast: Forecast) => (
-          <Resort
+          <EpicResort
             key={forecast.resortID}
             forecast={forecast}
             maxWeightedSnowfall={forecasts[0].weightedSnowfall}
