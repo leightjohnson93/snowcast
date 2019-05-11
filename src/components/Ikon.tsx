@@ -29,8 +29,7 @@ const Ikon = () => {
     snowconditions
       .map((resort: Resort) => ({
         ...resort,
-        weightedSnowfall:
-          resort.pastSnow.snow0day + resort.pastSnow.snow0day * 0.5,
+        weightedSnowfall: resort.pastSnow.snow0day + resort.pastSnow.sum3 * 0.5,
       }))
       .sort(
         (a: Resort, b: Resort): number =>
