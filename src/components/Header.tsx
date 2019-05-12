@@ -75,6 +75,7 @@ const ButtonAppBar: React.FC<{
             <img
               src={epicLogo}
               className={isEpic ? classes.logo : classes.transparent}
+              alt="Epic Logo"
             />
           </Button>
           <Button
@@ -85,6 +86,7 @@ const ButtonAppBar: React.FC<{
             <img
               src={ikonLogo}
               className={!isEpic ? classes.logo : classes.transparent}
+              alt="Ikon Logo"
             />
           </Button>
 

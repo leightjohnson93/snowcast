@@ -72,7 +72,7 @@ const EpicResort: React.FC<{
             disableTypography
             avatar={
               <Avatar
-                src={logoURLString}
+                src={logoURLString.replace('http', 'https')}
                 alt="resort logo"
                 style={styles.avatar}
               />
