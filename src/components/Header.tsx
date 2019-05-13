@@ -51,11 +51,8 @@ const styles = {
 
 const ButtonAppBar: React.FC<{
   classes: Classes
-
-  sortBy: string
-  setSortBy: Function
-}> = ({ classes, sortBy, setSortBy }) => {
-  const { pass, setPass } = useContext(Context)
+}> = ({ classes }) => {
+  const { pass, setPass, sortBy, setSortBy, sortList } = useContext(Context)
   const isEpic = pass === 'epic'
   return (
     <div className={classes.root}>
@@ -103,9 +100,11 @@ const ButtonAppBar: React.FC<{
               onChange={e => setSortBy(e.target.value)}
               input={<FilledInput name="sort" style={styles.input} />}
             >
-              <MenuItem value="snowfall">Snowfall</MenuItem>
-              <MenuItem value="temperature">Temperature</MenuItem>
-              <MenuItem value="name">Name</MenuItem>
+              {sortList.map(sort => (
+                <MenuItem value={sort} key={sort}>
+                  {sort}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Toolbar>

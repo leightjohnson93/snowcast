@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import Header from './Header'
+import React, { useState, useEffect, useContext } from 'react'
 import IkonResort from './IkonResort'
 import axios from 'axios'
-import { Resort } from '../interfaces'
+import { Resort, Forecast } from '../interfaces'
 import { createMuiTheme, createStyles } from '@material-ui/core/styles'
 import { CssBaseline, Grid } from '@material-ui/core'
+import { Context } from '../Context'
 
 const styles = createStyles({
   gridContainer: {
@@ -15,7 +15,7 @@ const styles = createStyles({
 
 const Ikon = () => {
   const [resorts, setResorts] = useState<Resort[]>([])
-  const [sortBy, setSortBy] = useState<string>('snowfall')
+  const { sortBy } = useContext(Context)
 
   useEffect(() => {
     axios(
@@ -24,6 +24,24 @@ const Ikon = () => {
       setResorts(addWeightedSnowfall(shortenName(data.rows)))
     )
   }, [])
+
+  useEffect(() => {
+    let sortedResorts: Resort[] = resorts
+    switch (sortBy) {
+      case 'snowfall':
+        sortedResorts = resorts.sort(
+          (a: Resort, b: Resort): number =>
+            b.weightedSnowfall - a.weightedSnowfall
+        )
+        break
+      case 'name':
+        sortedResorts = resorts.sort(
+          (a: Resort, b: Resort): number => (a.name > b.name ? 1 : -1)
+        )
+        break
+    }
+    setResorts(sortedResorts)
+  }, [sortBy])
 
   const addWeightedSnowfall = (snowconditions: Resort[]): Resort[] =>
     snowconditions
@@ -44,7 +62,6 @@ const Ikon = () => {
 
   return (
     <>
-      <Header sortBy={sortBy} setSortBy={setSortBy} />
       <Grid
         container
         spacing={16}

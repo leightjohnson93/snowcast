@@ -59,4 +59,7 @@ export interface Classes {
 export interface ContextInterface {
   pass: string
   setPass: Function
+  sortList: string[]
+  sortBy: string
+  setSortBy: Function
 }

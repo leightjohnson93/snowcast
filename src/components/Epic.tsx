@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { Context } from '../Context'
 import axios from 'axios'
 import EpicResort from './EpicResort'
 import { Forecast, Mountain } from '../interfaces'
 import { CssBaseline, Grid } from '@material-ui/core'
 import { createMuiTheme, createStyles } from '@material-ui/core/styles'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import Header from './Header'
 
 const styles = createStyles({
   gridContainer: {
@@ -17,7 +17,7 @@ const styles = createStyles({
 const Epic: React.FC = () => {
   const [forecasts, setForecasts] = useState<Forecast[]>([])
   const [mountains, setMountains] = useState<Mountain[]>([])
-  const [sortBy, setSortBy] = useState<string>('snowfall')
+  const { sortBy } = useContext(Context)
 
   useEffect(() => {
     axios(
@@ -78,7 +78,6 @@ const Epic: React.FC = () => {
 
   return (
     <>
-      <Header sortBy={sortBy} setSortBy={setSortBy} />
       {!forecasts.length && <LinearProgress />}
       <Grid
         container
