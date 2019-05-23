@@ -5,6 +5,7 @@ import { Resort, Forecast } from '../interfaces'
 import { createMuiTheme, createStyles } from '@material-ui/core/styles'
 import { CssBaseline, Grid } from '@material-ui/core'
 import { Context } from '../Context'
+import LinearProgress from '@material-ui/core/LinearProgress'
 
 const styles = createStyles({
   gridContainer: {
@@ -62,6 +63,7 @@ const Ikon = () => {
 
   return (
     <>
+      {!resorts.length && <LinearProgress />}
       <Grid
         container
         spacing={16}
