@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, FunctionComponent } from 'react'
 import { withTheme, createStyles } from '@material-ui/core/styles'
 import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery'
 import Grid from '@material-ui/core/Grid'
@@ -19,6 +19,7 @@ import IconButton from '@material-ui/core/IconButton'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Typography from '@material-ui/core/Typography'
 import { Forecast, Mountain, Theme } from '../interfaces'
+import Checkbox from '@material-ui/core/Checkbox'
 
 const EpicResort: React.FC<{
   forecast: Forecast
@@ -26,22 +27,42 @@ const EpicResort: React.FC<{
   theme: Theme
   maxWeightedSnowfall: number
 }> = ({ forecast, mountain, theme, maxWeightedSnowfall }) => {
-  const [expanded, setExpanded] = useState(false)
   const {
     newSnow,
     last48Hours,
     last7Days,
     weightedSnowfall,
     weatherForecast,
+    resortID,
   } = forecast
   const { name, logoURLString } = mountain
+  const storageID: string = `Epic ${resortID}`
+
+  const [expanded, setExpanded] = useState(false)
+  const [pinned, setPinned] = useState(localStorage.getItem(storageID))
 
   const snowfallToHex = (): string =>
-    Math.floor((weightedSnowfall / maxWeightedSnowfall) * 255).toString(16)
+    weightedSnowfall / maxWeightedSnowfall > 0.2
+      ? Math.floor((weightedSnowfall / maxWeightedSnowfall) * 255).toString(16)
+      : '33'
+
+  const togglePin = () => {
+    if (pinned) {
+      localStorage.removeItem(storageID)
+      setPinned(null)
+    } else {
+      localStorage.setItem(storageID, 'pinned')
+      setPinned('pinned')
+    }
+  }
 
   const styles = createStyles({
     card: {
-      backgroundColor: `${theme.palette.primary.light}${snowfallToHex()}`,
+      background: pinned
+        ? theme.palette.primary.light
+        : `linear-gradient(${theme.palette.primary.light}, ${
+            theme.palette.primary.light
+          }${snowfallToHex()})`,
     },
     gridItem: {
       padding: useMediaQuery('(max-width:600px)') ? '8px 0px' : '8px 8px',
@@ -127,6 +148,11 @@ const EpicResort: React.FC<{
             </Grid>
           </CardContent>
           <CardActions style={{ bottom: 0 }}>
+            <Checkbox
+              onClick={togglePin}
+              checked={Boolean(pinned)}
+              color="primary"
+            />
             <IconButton
               style={styles.expand}
               onClick={() => setExpanded(!expanded)}

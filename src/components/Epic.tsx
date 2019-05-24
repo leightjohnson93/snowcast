@@ -85,20 +85,27 @@ const Epic: React.FC = () => {
         justify="flex-start"
         style={styles.gridContainer}
       >
-        {forecasts.map((forecast: Forecast) => (
-          <EpicResort
-            key={forecast.resortID}
-            forecast={forecast}
-            maxWeightedSnowfall={forecasts[0].weightedSnowfall}
-            mountain={
-              (mountains[0] &&
-                mountains.find(
-                  (mountain: Mountain) =>
-                    mountain.mountainID === forecast.resortID
-                )) || { mountainID: 0, name: '', logoURLString: '' }
-            }
-          />
-        ))}
+        {forecasts
+          .sort(forecast =>
+            localStorage.getItem(`Epic ${forecast.resortID}`) ? -1 : 1
+          )
+          .map((forecast: Forecast) => (
+            <EpicResort
+              key={forecast.resortID}
+              forecast={forecast}
+              maxWeightedSnowfall={Math.max.apply(
+                Math,
+                forecasts.map(forecast => forecast.weightedSnowfall)
+              )}
+              mountain={
+                (mountains[0] &&
+                  mountains.find(
+                    (mountain: Mountain) =>
+                      mountain.mountainID === forecast.resortID
+                  )) || { mountainID: 0, name: '', logoURLString: '' }
+              }
+            />
+          ))}
       </Grid>
     </>
   )

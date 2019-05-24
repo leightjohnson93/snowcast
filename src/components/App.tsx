@@ -12,7 +12,11 @@ import {
 
 const theme = createMuiTheme({
   palette: {
-    primary: { main: '#8b85ff', light: '#85f3ff', dark: '#85ff91' },
+    primary: {
+      main: '#8b85ff',
+      light: '#85f3ff',
+      dark: '#85ffce',
+    },
   },
   typography: {
     useNextVariants: true,
