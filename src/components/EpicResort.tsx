@@ -92,11 +92,7 @@ const EpicResort: React.FC<{
             title={<Typography variant="h4">{name}</Typography>}
             disableTypography
             avatar={
-              <Avatar
-                src={logoURLString.replace('http', 'https')}
-                alt="resort logo"
-                style={styles.avatar}
-              />
+              <Avatar src={logoURLString} alt="logo" style={styles.avatar} />
             }
           />
           <CardContent style={styles.forecastToday}>
